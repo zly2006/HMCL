@@ -78,7 +78,9 @@ public class AccountListItem extends RadioButton {
             subtitle.bind(Bindings.concat(
                     loginTypeName, ", ", i18n("account.injector.server"), ": ",
                     Bindings.createStringBinding(server::getName, server), portableSuffix));
-        } else {
+        } else if (account instanceof MicrosoftAccount && ((MicrosoftAccount) account).isTemporary()) {
+            subtitle.set(loginTypeName + portableSuffix + ", " + i18n("account.microsoft.temporary"));
+        }else {
             subtitle.set(loginTypeName + portableSuffix);
         }
 

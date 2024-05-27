@@ -22,6 +22,7 @@ import org.jackhuang.hmcl.auth.*;
 import org.jackhuang.hmcl.auth.yggdrasil.Texture;
 import org.jackhuang.hmcl.auth.yggdrasil.TextureType;
 import org.jackhuang.hmcl.auth.yggdrasil.YggdrasilService;
+import org.jackhuang.hmcl.util.StringUtils;
 import org.jackhuang.hmcl.util.javafx.BindingMapping;
 
 import java.util.Map;
@@ -168,5 +169,9 @@ public class MicrosoftAccount extends OAuthAccount {
         if (o == null || getClass() != o.getClass()) return false;
         MicrosoftAccount that = (MicrosoftAccount) o;
         return this.isPortable() == that.isPortable() && characterUUID.equals(that.characterUUID);
+    }
+
+    public boolean isTemporary() {
+        return StringUtils.isBlank(session.getRefreshToken());
     }
 }

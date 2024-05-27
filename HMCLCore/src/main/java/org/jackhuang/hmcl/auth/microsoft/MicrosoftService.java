@@ -48,7 +48,7 @@ import static org.jackhuang.hmcl.util.logging.Logger.LOG;
 import static org.jackhuang.hmcl.util.Pair.pair;
 
 public class MicrosoftService {
-    private static final String SCOPE = "XboxLive.signin offline_access";
+    private final String SCOPE;
     private static final ThreadPoolExecutor POOL = threadPool("MicrosoftProfileProperties", true, 2, 10,
             TimeUnit.SECONDS);
 
@@ -56,8 +56,18 @@ public class MicrosoftService {
 
     private final ObservableOptionalCache<UUID, CompleteGameProfile, AuthenticationException> profileRepository;
 
-    public MicrosoftService(OAuth.Callback callback) {
+    /**
+     *
+     * @param callback the callback after oauth finished
+     * @param temporary whether to request a refresh token
+     */
+    public MicrosoftService(OAuth.Callback callback, boolean temporary) {
         this.callback = requireNonNull(callback);
+        if (temporary) {
+            SCOPE = "XboxLive.signin";
+        } else {
+            SCOPE = "XboxLive.signin offline_access";
+        }
         this.profileRepository = new ObservableOptionalCache<>(uuid -> {
             LOG.info("Fetching properties of " + uuid);
             return getCompleteGameProfile(uuid);
